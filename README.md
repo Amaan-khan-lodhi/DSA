@@ -10,7 +10,7 @@ This repository contains my C++ implementations and practice programs while lear
 
 - 2D to 1D Array Conversion
 - GPA Calculation
-
+- Linear Search
 ## Language
 
 - C++
