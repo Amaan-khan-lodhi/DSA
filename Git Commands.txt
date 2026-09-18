@@ -1,0 +1,359 @@
+GIT / GITHUB COMMAND CHEAT SHEET
+For Amaan's DSA repository
+================================
+
+REPOSITORY
+----------
+GitHub repo:
+https://github.com/Amaan-khan-lodhi/DSA.git
+
+Local DSA folder:
+D:/DSA
+
+Git Bash:
+cd /d/DSA
+
+
+1. NORMAL WORKFLOW — USE THIS MOST OF THE TIME
+-----------------------------------------------
+After creating or modifying a .cpp file:
+
+git add .
+git commit -m "Add Binary Search"
+git push
+
+Examples:
+git add .
+git commit -m "Add Linear Search"
+git push
+
+For modifying existing code:
+git add .
+git commit -m "Update Binary Search"
+git push
+
+
+2. IF GIT OPENS AN EDITOR (VIM) INSTEAD OF THE PROMPT
+------------------------------------------------------
+Sometimes after `git commit`, `git pull`, or `git merge`, a black screen
+appears with text like "-- INSERT --" or ".git/MERGE_MSG" at the bottom.
+This is normal — Git opened Vim so you can write/edit a commit message.
+It is NOT an error and NOT a place to type shell commands.
+
+If it happens:
+1. Press Esc (leaves typing/insert mode).
+2. Type :wq then Enter — saves the message and finishes the commit.
+   (Or type :q! then Enter to cancel WITHOUT saving, if you want out.)
+
+If you typed something wrong before pressing Esc:
+- Move to that line, press Esc first, then press dd to delete the whole
+  line (repeat dd for each extra line), then :wq to save and exit.
+
+To stop this from happening for commits (optional, one-time setup):
+git config --global core.editor "nano"
+(or use a GUI editor like VS Code:)
+git config --global core.editor "code --wait"
+
+To skip the editor entirely on a merge and accept the default message:
+git merge --no-edit
+
+
+3. CHECK STATUS
+---------------
+git status
+
+Shows:
+- modified files
+- untracked files
+- staged files
+- whether your branch is ahead/behind GitHub
+
+
+4. SEE CHANGES
+--------------
+git diff
+
+See unstaged changes.
+
+git diff --staged
+
+See changes already added with git add.
+
+
+5. ADD FILES
+------------
+Add everything:
+git add .
+
+Add one file:
+git add "Binary Search.cpp"
+
+Add a specific file:
+git add "filename.cpp"
+
+
+6. COMMIT
+---------
+git commit -m "Add new DSA code"
+
+Important:
+A commit saves changes locally. It does NOT automatically upload them to GitHub.
+
+
+7. PUSH TO GITHUB
+-----------------
+Normal push:
+git push
+
+First push of a new branch:
+git push -u origin main
+
+For your already-connected DSA repo, normally use:
+git push
+
+
+8. PULL CHANGES FROM GITHUB
+---------------------------
+git pull
+
+If Git says:
+"Updates were rejected because the remote contains work that you do not have locally"
+
+Use:
+git pull --rebase origin main
+
+Then:
+git push
+
+If there is a conflict, STOP and inspect the conflict before using force push.
+
+Note: a plain `git pull` can trigger a merge and open Vim for a merge
+commit message (see Section 2) — that's expected, not a bug.
+
+
+9. CHECK REMOTE REPOSITORY
+--------------------------
+git remote -v
+
+Your expected remote:
+origin  https://github.com/Amaan-khan-lodhi/DSA.git
+
+
+10. BRANCH COMMANDS
+------------------
+Show current branch:
+git branch
+
+Show all branches:
+git branch -a
+
+Rename current branch to main:
+git branch -M main
+
+Switch branch:
+git switch main
+
+
+11. UNTRACK / REMOVE FILES
+--------------------------
+Remove a file from Git and your computer:
+git rm "filename"
+
+Remove a file from Git but KEEP it on your computer:
+git rm --cached "filename"
+
+Remove a folder from Git but KEEP it locally:
+git rm --cached -r foldername
+
+
+12. UNDO / RESTORE
+------------------
+Discard changes to one file:
+git restore "filename"
+
+Unstage a file:
+git restore --staged "filename"
+
+IMPORTANT:
+git restore can permanently discard uncommitted changes.
+
+
+13. GITIGNORE
+------------
+For C++ projects, a .gitignore can prevent compiled files from being uploaded.
+
+Example:
+*.exe
+
+Create it:
+echo "*.exe" >> .gitignore
+
+Then:
+git add .gitignore
+git commit -m "Add gitignore"
+git push
+
+You can also add:
+.vscode/
+*.exe
+*.obj
+*.o
+
+
+14. SEE COMMIT HISTORY
+---------------------
+git log --oneline
+
+Last 3 commits:
+git log --oneline -3
+
+
+15. CREATE A NEW LOCAL REPOSITORY
+---------------------------------
+Only use these when starting a NEW local project:
+
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/Amaan-khan-lodhi/DSA.git
+git push -u origin main
+
+DO NOT run git init again for your already-existing DSA repo.
+
+
+16. CLONE A GITHUB REPOSITORY
+-----------------------------
+For downloading an existing GitHub repo:
+
+git clone https://github.com/Amaan-khan-lodhi/DSA.git
+
+Then:
+cd DSA
+
+
+17. IF PUSH SAYS 403 / WRONG GITHUB ACCOUNT
+--------------------------------------------
+Example:
+Permission to Amaan-khan-lodhi/DSA.git denied to saifkhandev.
+
+This means GitHub authentication is using the wrong account.
+
+On Windows:
+1. Open Credential Manager.
+2. Open Windows Credentials.
+3. Remove the saved GitHub credential.
+4. Run:
+   git push
+5. Sign in with the correct GitHub account.
+
+Check Git author identity:
+git config --global user.name
+git config --global user.email
+
+Change them if needed:
+git config --global user.name "Amaan Khan Lodhi"
+git config --global user.email "YOUR_GITHUB_EMAIL"
+
+NOTE:
+Changing user.name/user.email does NOT by itself change the GitHub account used for HTTPS authentication.
+
+
+18. COMMON PUSH ERROR: "FETCH FIRST"
+------------------------------------
+If:
+git push
+
+says:
+"rejected (fetch first)"
+or:
+"remote contains work that you do not have locally"
+
+Run:
+git status
+git pull --rebase origin main
+git push
+
+If conflicts appear:
+STOP and resolve the conflict before continuing.
+
+Do NOT use:
+git push --force
+
+unless you deliberately understand that it can overwrite remote history.
+
+
+19. MERGE / REBASE CONFLICTS AND HOW TO BACK OUT
+--------------------------------------------------
+If a rebase reports conflicts:
+
+git status
+
+Open the conflicted file(s), resolve the conflict, then:
+
+git add .
+git rebase --continue
+
+After the rebase finishes:
+git push
+
+If you want to cancel the rebase:
+git rebase --abort
+
+If a plain merge (not rebase) reports conflicts, resolve them the same
+way, then:
+git add .
+git commit
+
+If you want to cancel a merge instead of finishing it:
+git merge --abort
+
+
+20. QUICK DAILY CHEAT SHEET
+---------------------------
+MOST COMMON:
+
+cd /d/DSA
+git status
+git add .
+git commit -m "Describe what you changed"
+git push
+
+If push is rejected because GitHub has newer commits:
+
+git pull --rebase origin main
+git push
+
+
+21. USEFUL INFORMATION COMMANDS
+-------------------------------
+Git version:
+git --version
+
+Git username:
+git config --global user.name
+
+Git email:
+git config --global user.email
+
+All Git config:
+git config --list
+
+Remote:
+git remote -v
+
+Current status:
+git status
+
+
+IMPORTANT RULES FOR YOUR DSA REPO
+----------------------------------
+1. Do not run git init every time.
+2. Do not run git remote add origin every time.
+3. Do not use git push --force for normal work.
+4. Use git add . -> git commit -> git push for normal updates.
+5. Keep .exe files out of Git using .gitignore.
+6. If Git says the remote is ahead, use git pull --rebase origin main first.
+7. If there is a conflict, stop and inspect it instead of guessing.
+8. If a black Vim screen opens ("-- INSERT --" or "MERGE_MSG"), do not
+   type commands into it — press Esc, then :wq to save/finish (see Section 2).
